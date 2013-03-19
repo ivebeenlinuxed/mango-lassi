@@ -1579,6 +1579,8 @@ int main(int argc, char *argv[]) {
     if (server_init(&ls) < 0)
         goto fail;
 
+    lassi_prefs_show(&ls.prefs_info);
+
     gtk_main();
 
 fail:
