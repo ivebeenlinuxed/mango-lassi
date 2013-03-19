@@ -37,7 +37,6 @@ mango_lassi_SOURCES = \
 	src/lassi-server.c src/lassi-server.h \
 	src/lassi-clipboard.c src/lassi-clipboard.h \
 	src/lassi-avahi.c src/lassi-avahi.h \
-	src/lassi-tray.c src/lassi-tray.h \
 	src/lassi-prefs.c src/lassi-prefs.h
 
 BUILT_SOURCES=$(nodist_mango_lassi_SOURCES)

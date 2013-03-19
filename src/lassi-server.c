@@ -23,7 +23,6 @@
 #include "lassi-order.h"
 #include "lassi-clipboard.h"
 #include "lassi-avahi.h"
-#include "lassi-tray.h"
 
 #include "paths.h"
 
@@ -388,8 +387,6 @@ static void show_welcome(LassiConnection *lc, gboolean is_connect) {
         body = g_strdup_printf(_("You're no longer sharing keyboard and mouse with <b>%s</b> which was located to the <b>%s</b>."), lc->id, to_left ? _("left") : _("right"));
     }
 
-    lassi_tray_show_notification(&ls->tray_info, summary, body, to_left ? LASSI_TRAY_NOTIFICATION_LEFT : LASSI_TRAY_NOTIFICATION_RIGHT);
-
     g_free(summary);
     g_free(body);
 }
@@ -457,8 +454,6 @@ static void connection_unlink(LassiConnection *lc, gboolean remove_from_order) {
         lassi_prefs_update(&ls->prefs_info);
         server_dump(ls);
     }
-
-    lassi_tray_update(&ls->tray_info, ls->n_connections);
 
     connection_destroy(lc);
 }
@@ -1350,7 +1345,6 @@ static LassiConnection* connection_add(LassiServer *ls, DBusConnection *c, gbool
 
     dbus_message_unref(m);
 
-    lassi_tray_update(&ls->tray_info, ls->n_connections);
     return lc;
 }
 
@@ -1426,9 +1420,6 @@ static int server_init(LassiServer *ls) {
     if (lassi_osd_init(&ls->osd_info) < 0)
         goto finish;
 
-    if (lassi_tray_init(&ls->tray_info, ls) < 0)
-        goto finish;
-
     if (lassi_clipboard_init(&ls->clipboard_info, ls) < 0)
         goto finish;
 
@@ -1492,7 +1483,6 @@ static void server_done(LassiServer *ls) {
     lassi_osd_done(&ls->osd_info);
     lassi_clipboard_done(&ls->clipboard_info);
     lassi_avahi_done(&ls->avahi_info);
-    lassi_tray_done(&ls->tray_info);
     lassi_prefs_done(&ls->prefs_info);
 
     memset(ls, 0, sizeof(*ls));

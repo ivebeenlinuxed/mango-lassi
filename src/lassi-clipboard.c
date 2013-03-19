@@ -116,7 +116,6 @@ static void clear_func(GtkClipboard *clipboard, gpointer userdata) {
 
 int lassi_clipboard_init(LassiClipboardInfo *i, LassiServer *s) {
     GdkDisplay *display;
-    GdkScreen  *screen;
 
     g_assert(i);
     g_assert(s);
@@ -124,8 +123,7 @@ int lassi_clipboard_init(LassiClipboardInfo *i, LassiServer *s) {
     memset(i, 0, sizeof(*i));
     i->server = s;
 
-    screen = gtk_status_icon_get_screen(s->tray_info.status_icon);
-    display = gdk_screen_get_display(screen);
+    display = gdk_display_get_default();
     i->clipboard = gtk_clipboard_get_for_display(display, GDK_SELECTION_CLIPBOARD);
     i->primary = gtk_clipboard_get_for_display(display, GDK_SELECTION_PRIMARY);
 

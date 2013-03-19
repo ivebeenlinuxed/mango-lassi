@@ -102,7 +102,6 @@ PKG_CHECK_MODULES(GTK, [ gtk+-2.0 ])
 PKG_CHECK_MODULES(XTEST, [ xtst x11 ])
 PKG_CHECK_MODULES(AVAHI, [ avahi-glib avahi-client ])
 PKG_CHECK_MODULES(AVAHI_UI, [ avahi-ui ])
-PKG_CHECK_MODULES(LIBNOTIFY, [ libnotify ])
 
 AM_GNU_GETTEXT([external])
 

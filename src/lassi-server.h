@@ -11,7 +11,6 @@ typedef struct LassiConnection LassiConnection;
 #include "lassi-osd.h"
 #include "lassi-clipboard.h"
 #include "lassi-avahi.h"
-#include "lassi-tray.h"
 #include "lassi-prefs.h"
 
 struct LassiServer {
@@ -50,7 +49,6 @@ struct LassiServer {
     LassiOsdInfo osd_info;
     LassiClipboardInfo clipboard_info;
     LassiAvahiInfo avahi_info;
-    LassiTrayInfo tray_info;
     LassiPrefsInfo prefs_info;
 };
 
