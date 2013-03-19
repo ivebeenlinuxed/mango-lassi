@@ -37,7 +37,6 @@ resources.h: src/ui.gresource.xml $(resource_files)
 nodist_mango_lassi_SOURCES=paths.h
 mango_lassi_SOURCES = \
 	src/lassi-grab.c src/lassi-grab.h \
-	src/lassi-help.c src/lassi-help.h \
 	src/lassi-order.c src/lassi-order.h \
 	src/lassi-osd.c src/lassi-osd.h \
 	src/lassi-server.c src/lassi-server.h \

@@ -6,7 +6,6 @@
 
 #include <avahi-ui/avahi-ui.h>
 
-#include "lassi-help.h"
 #include "lassi-prefs.h"
 #include "lassi-server.h"
 
@@ -154,7 +153,10 @@ static void on_close_button_clicked(GtkButton *widget, LassiPrefsInfo *i) {
 }
 
 static void on_help_button_clicked(GtkButton *button, LassiPrefsInfo *i) {
-    lassi_help_open(gtk_widget_get_screen(GTK_WIDGET(button)), "mango-lassi", "preferences");
+    gtk_show_uri(gtk_widget_get_screen(GTK_WIDGET(button)),
+                 "help:mango-lassi",
+                 gtk_get_current_event_time(),
+                 NULL);
 }
 
 static void update_sensitive(LassiPrefsInfo *i) {
