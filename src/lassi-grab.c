@@ -417,7 +417,7 @@ void lassi_grab_done(LassiGrabInfo *i) {
         gdk_window_destroy(i->right_window);
 
     if (i->empty_cursor)
-        gdk_cursor_unref(i->empty_cursor);
+        g_object_unref(i->empty_cursor);
 }
 
 void lassi_grab_enable_triggers(LassiGrabInfo *i, gboolean left, gboolean right) {

@@ -82,7 +82,7 @@ int lassi_osd_init(LassiOsdInfo *osd) {
     osd->left_icon = gtk_image_new();
     osd->right_icon = gtk_image_new();
 
-    hbox = gtk_hbox_new(0, 0);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_container_set_border_width(GTK_CONTAINER(hbox), 8);
 
     gtk_box_pack_start(GTK_BOX(hbox), osd->left_icon, FALSE, TRUE, 0);
