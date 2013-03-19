@@ -45,7 +45,7 @@ AC_GNU_SOURCE
 # GCC flags
 
 test_gcc_flag() {
-    AC_LANG_CONFTEST([int main(int argc, char*argv[]) {}])
+    AC_LANG_CONFTEST([AC_LANG_SOURCE([[int main(int argc, char*argv[]) {}]])])
     $CC -c conftest.c $CFLAGS -o conftest.o > /dev/null 2> /dev/null
     ret=$?
     rm -f conftest.o
