@@ -25,11 +25,9 @@
 
 G_BEGIN_DECLS
 
-#if GTK_CHECK_VERSION(2,14,0)
 void lassi_help_open (GdkScreen   *screen,
                       gchar const *document_name,
                       gchar const *section_name);
-#endif
 
 G_END_DECLS
 

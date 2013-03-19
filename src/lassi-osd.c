@@ -11,17 +11,8 @@
 
 #include "lassi-osd.h"
 
-#if !GTK_CHECK_VERSION(2,14,0)
-#define gtk_widget_get_window(wid) (GTK_WIDGET(wid)->window)
-#endif
-
-#if !GTK_CHECK_VERSION(2,18,0)
-#define gtk_widget_get_allocation(wid,all) (*all) = (GTK_WIDGET (wid)->allocation)
-#endif
-
-static gboolean expose_event_cb(GtkWidget* widget, GdkEventExpose* event, gpointer user_data) {
+static gboolean draw_cb(GtkWidget* widget, cairo_t *cr, gpointer user_data) {
     GtkAllocation  allocation = {0, 0, -1, -1};
-    cairo_t* cr = gdk_cairo_create (event->window);
 
     gtk_widget_get_allocation (widget, &allocation);
 
@@ -63,60 +54,6 @@ static gboolean expose_event_cb(GtkWidget* widget, GdkEventExpose* event, gpoint
     return FALSE;
 }
 
-static void composited_changed_cb(GdkScreen* screen, gpointer user_data) {
-    GdkColormap* colormap = NULL;
-
-    if (gdk_screen_is_composited (screen))
-        colormap = gdk_screen_get_rgba_colormap (screen);
-
-    gtk_widget_set_app_paintable (user_data, colormap != NULL);
-    if (!colormap) {
-        GdkColor color;
-        guint32 cardinal = 0xbfffffff;
-
-#if GTK_CHECK_VERSION(2,12,0)
-        /* FIXME: adjust the background of the window, so the foregroud will still be painted opaque */
-        gdk_window_set_opacity (gtk_widget_get_window (user_data), 1.0 * cardinal / 0xffffffff);
-#else
-        GdkDisplay *display;
-
-        display = gdk_drawable_get_display(GTK_WIDGET(user_data)->window);
-        XChangeProperty(GDK_DISPLAY_XDISPLAY(display),
-                GDK_WINDOW_XID(GTK_WIDGET(user_data)->window),
-                gdk_x11_get_xatom_by_name_for_display(display, "_NET_WM_WINDOW_OPACITY"),
-                XA_CARDINAL, 32,
-                PropModeReplace,
-                (guchar *) &cardinal, 1);
-#endif
-
-        colormap = gdk_screen_get_rgb_colormap (screen);
-
-        g_signal_handlers_disconnect_by_func (user_data, (gpointer)expose_event_cb, NULL);
-
-        gdk_color_parse("#262624", &color);
-        if (gdk_colormap_alloc_color(gtk_widget_get_colormap(user_data), &color, TRUE, TRUE)) {
-            gtk_widget_modify_bg(user_data, GTK_STATE_NORMAL, &color);
-        }
-    } else {
-        g_signal_connect (user_data, "expose-event",
-                          G_CALLBACK (expose_event_cb), NULL);
-    }
-
-    g_return_if_fail (colormap);
-
-    gtk_widget_set_colormap (user_data, colormap);
-}
-
-static void screen_changed_cb(GtkWidget* widget, GdkScreen* old_screen, gpointer user_data) {
-    if (old_screen)
-        g_signal_handlers_disconnect_by_func (old_screen, (gpointer)composited_changed_cb, widget);
-
-    g_signal_connect (gtk_widget_get_screen (widget), "composited-changed",
-                      G_CALLBACK (composited_changed_cb), widget);
-
-    composited_changed_cb (gtk_widget_get_screen (widget), widget);
-}
-
 int lassi_osd_init(LassiOsdInfo *osd) {
     GtkWidget *hbox;
 
@@ -136,6 +73,8 @@ int lassi_osd_init(LassiOsdInfo *osd) {
     gtk_window_set_accept_focus(GTK_WINDOW(osd->window), FALSE);
     gtk_window_set_focus_on_map(GTK_WINDOW(osd->window), FALSE);
     gtk_window_set_gravity(GTK_WINDOW(osd->window), GDK_GRAVITY_SOUTH_WEST);
+    gtk_widget_set_app_paintable(GTK_WIDGET(osd->window), TRUE);
+    g_signal_connect(osd->window, "draw", G_CALLBACK(draw_cb), NULL);
 
     osd->label = gtk_label_new("Test");
     gtk_misc_set_padding(GTK_MISC(osd->label), 16, 0);
@@ -154,10 +93,6 @@ int lassi_osd_init(LassiOsdInfo *osd) {
 
     gtk_widget_show(hbox);
     gtk_widget_show(osd->label);
-
-    g_signal_connect (osd->window, "screen-changed",
-                      G_CALLBACK (screen_changed_cb), NULL);
-    screen_changed_cb (osd->window, NULL, NULL);
 
     gtk_widget_realize(GTK_WIDGET(osd->window));
 

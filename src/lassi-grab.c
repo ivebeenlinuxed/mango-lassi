@@ -344,9 +344,6 @@ static unsigned int get_lock_mask(LassiGrabInfo *i, LassiServer *s) {
 
 int lassi_grab_init(LassiGrabInfo *i, LassiServer *s) {
     GdkWindowAttr wa;
-    GdkColor black = { 0, 0, 0, 0 };
-    const gchar cursor_data[1] = { 0 };
-    GdkBitmap *bitmap;
     int xtest_event_base, xtest_error_base;
     int major_version, minor_version;
 
@@ -368,9 +365,11 @@ int lassi_grab_init(LassiGrabInfo *i, LassiServer *s) {
     i->lock_mask = get_lock_mask(i,s);
 
     /* Create empty cursor */
-    bitmap = gdk_bitmap_create_from_data(NULL, cursor_data, 1, 1);
-    i->empty_cursor = gdk_cursor_new_from_pixmap(bitmap, bitmap, &black, &black, 0, 0);
-    g_object_unref(bitmap);
+    {
+        GdkPixbuf *pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE,
+                                            8, 1, 1);
+        i->empty_cursor = gdk_cursor_new_from_pixbuf(i->display, pixbuf, 0, 0);
+    }
 
     /* Create trigger windows */
     memset(&wa, 0, sizeof(wa));

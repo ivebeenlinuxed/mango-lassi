@@ -98,10 +98,10 @@ PKG_PROG_PKG_CONFIG
 #### D-Bus ####
 
 PKG_CHECK_MODULES(DBUS, [ dbus-1 >= 1.1.1 dbus-glib-1 ])
-PKG_CHECK_MODULES(GTK, [ gtk+-2.0 ])
+PKG_CHECK_MODULES(GTK, [ gtk+-3.0 ])
 PKG_CHECK_MODULES(XTEST, [ xtst x11 ])
 PKG_CHECK_MODULES(AVAHI, [ avahi-glib avahi-client ])
-PKG_CHECK_MODULES(AVAHI_UI, [ avahi-ui ])
+PKG_CHECK_MODULES(AVAHI_UI, [ avahi-ui-gtk3 ])
 
 AM_GNU_GETTEXT([external])
 

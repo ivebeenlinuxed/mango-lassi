@@ -9,13 +9,6 @@
 
 #define LASSI_MARKER "application/x-mango-lassi-marker"
 
-#if !GTK_CHECK_VERSION(2,14,0)
-#define gtk_selection_data_get_data(sd)   ((sd)->data)
-#define gtk_selection_data_get_format(sd) ((sd)->format)
-#define gtk_selection_data_get_length(sd) ((sd)->length)
-#define gtk_selection_data_get_target(sd) ((sd)->target)
-#endif
-
 static void targets_received(GtkClipboard *clipboard, GdkAtom *atoms, int n_atoms, gpointer userdata) {
     int j, k;
     LassiClipboardInfo *i = userdata;
