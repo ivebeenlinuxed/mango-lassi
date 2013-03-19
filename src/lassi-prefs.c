@@ -12,10 +12,6 @@
 
 #include "paths.h"
 
-#ifndef UI_FILE
-#define UI_FILE "mango-lassi.ui"
-#endif
-
 enum {
     COLUMN_ICON,
     COLUMN_NAME,
@@ -253,7 +249,7 @@ int lassi_prefs_init(LassiPrefsInfo *i, LassiServer *server) {
     i->server = server;
 
     i->builder = gtk_builder_new();
-    if (!gtk_builder_add_from_file(i->builder, UI_FILE, &error)) {
+    if (!gtk_builder_add_from_resource(i->builder, "/org/gnome/mango-lassi/mango-lassi.ui", &error)) {
         g_warning("couldn't load the builder file: %s", error->message);
         g_error_free(error);
     }

@@ -52,3 +52,6 @@ xinput
 intltool-extract.in
 intltool-merge.in
 intltool-update.in
+
+resources.c
+resources.h

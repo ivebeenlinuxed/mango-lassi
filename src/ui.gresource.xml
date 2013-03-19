@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/gnome/mango-lassi">
+    <file preprocess="xml-stripblanks" alias="mango-lassi.ui">src/mango-lassi.ui</file>
+  </gresource>
+</gresources>

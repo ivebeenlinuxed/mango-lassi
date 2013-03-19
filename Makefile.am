@@ -28,6 +28,12 @@ SUBDIRS = po . doc
 bin_PROGRAMS = \
 	mango-lassi
 
+resource_files = $(shell glib-compile-resources --sourcedir=$(srcdir) --generate-dependencies $(srcdir)/src/ui.gresource.xml)
+resources.c: src/ui.gresource.xml $(resource_files)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source $<
+resources.h: src/ui.gresource.xml $(resource_files)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-header $<
+
 nodist_mango_lassi_SOURCES=paths.h
 mango_lassi_SOURCES = \
 	src/lassi-grab.c src/lassi-grab.h \
@@ -37,9 +43,10 @@ mango_lassi_SOURCES = \
 	src/lassi-server.c src/lassi-server.h \
 	src/lassi-clipboard.c src/lassi-clipboard.h \
 	src/lassi-avahi.c src/lassi-avahi.h \
-	src/lassi-prefs.c src/lassi-prefs.h
+	src/lassi-prefs.c src/lassi-prefs.h \
+	resources.c resources.h
 
-BUILT_SOURCES=$(nodist_mango_lassi_SOURCES)
+BUILT_SOURCES=$(nodist_mango_lassi_SOURCES) resources.c resources.h
 
 mango_lassi_LDADD = \
 	$(AM_LDADD) \
@@ -64,12 +71,9 @@ mango_lassi_CFLAGS = \
 	$(NULL)
 
 paths.h: Makefile
-	$(AM_V_GEN) echo "#define UI_FILE \"$(pkgdatadir)/mango-lassi.ui\"" > $@; \
 	echo "#define LOCALEDIR \"$(localedir)\"" >> $@
 
-pkgdata_DATA = src/mango-lassi.ui
-
-EXTRA_DIST = $(pkgdata_DATA)
+EXTRA_DIST = $(resource_files)
 
 ACLOCAL_AMFLAGS = -I m4
 
